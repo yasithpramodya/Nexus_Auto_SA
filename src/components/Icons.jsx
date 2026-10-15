@@ -1,5 +1,5 @@
 /**
- * Reusable, pixel-perfect SVG icons for Kensei Motors.
+ * Reusable, pixel-perfect SVG icons for Nexus Auto SA.
  * Clean, modern stroke style matching the dark glassmorphic design system.
  */
 

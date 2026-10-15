@@ -145,7 +145,7 @@ export default function About() {
                 <CountryBadge
                   code="AU"
                   name="Australia"
-                  role="Adelaide Dealership & Compliance"
+                  role="Clapham Dealership & Compliance"
                   details="Showroom sales, full Australian ADR compliance, roadworthy inspection, and South Australian registration."
                 />
                 <CountryBadge
@@ -240,8 +240,8 @@ export default function About() {
       <section className="section" ref={whyRef} style={{ background: 'var(--bg-1)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="wrap">
           <div className="section-head center reveal">
-            <p className="eyebrow">The Kensei Advantage</p>
-            <h2 className="section-title">Why Choose Kensei Motors?</h2>
+            <p className="eyebrow">The Nexus Advantage</p>
+            <h2 className="section-title">Why Choose Nexus Auto SA?</h2>
             <p className="section-sub">
               We stand apart through careful vehicle curation, cross-border reach, and genuine passion for connecting people with cars they truly love.
             </p>

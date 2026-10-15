@@ -325,7 +325,7 @@ export default function WhatWeOffer() {
                   Clear Filters
                 </button>
                 <Link
-                  to={`/contact?topic=Importing+a+car&message=${encodeURIComponent('Hi Kensei Motors, I am looking for a ' + search)}`}
+                  to={`/contact?topic=Importing+a+car&message=${encodeURIComponent('Hi Nexus Auto SA, I am looking for a ' + search)}`}
                   className="btn btn-primary"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
                 >

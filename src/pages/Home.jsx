@@ -56,8 +56,8 @@ const MiniIcons = {
 /* Testimonials data */
 const testimonials = [
   { name: "Marcus Thompson", initials: "MT", car: "Nissan Skyline R34 GT-R V-Spec", rating: 5, quote: "Absolute legends. Found my dream BNR34 in Japan within 2 weeks of enquiring. The Japanese auction sheet was 100% accurate, and the Australian compliance was handled without a hitch. I just picked up the keys in Adelaide ready to drive." },
-  { name: "Suresh Patel", initials: "SP", car: "Honda S660 Alpha", rating: 5, quote: "I was hesitant about importing from overseas, but Kensei Motors made it effortless. Weekly updates with photos from Yokohama port, zero hidden charges, and the car arrived in immaculate condition. Adelaide's best JDM dealer." },
-  { name: "Ryan Anderson", initials: "RA", car: "Toyota Crown Athlete S VIP", rating: 5, quote: "Bought the Crown Athlete directly off the Prospect showroom floor. Fully complied, fresh SA registration, fresh fluids, and detailed to perfection. Professional, knowledgeable team who genuinely love Japanese cars." },
+  { name: "Suresh Patel", initials: "SP", car: "Honda S660 Alpha", rating: 5, quote: "I was hesitant about importing from overseas, but Nexus Auto SA made it effortless. Weekly updates with photos from Yokohama port, zero hidden charges, and the car arrived in immaculate condition. Adelaide's best JDM dealer." },
+  { name: "Ryan Anderson", initials: "RA", car: "Toyota Crown Athlete S VIP", rating: 5, quote: "Bought the Crown Athlete directly off the Clapham showroom floor. Fully complied, fresh SA registration, fresh fluids, and detailed to perfection. Professional, knowledgeable team who genuinely love Japanese cars." },
 ];
 
 /* Why choose us data with SVG icons */
@@ -101,7 +101,7 @@ export default function Home() {
         <img
           className="hero-bg"
           src={heroImage}
-          alt="Kensei Motors Luxury Japanese Automotive Showroom"
+          alt="Nexus Auto SA Luxury Japanese Automotive Showroom"
           fetchpriority="high"
         />
         <div className="hero-vignette" aria-hidden="true" />
@@ -316,12 +316,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════ WHY KENSEI ══════════════════════ */}
+      {/* ═══════════════ WHY NEXUS AUTO SA ═══════════════ */}
       <section className="section" style={{ background: 'var(--bg-1)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }} ref={featuresRef}>
         <div className="wrap">
           <div className="section-head center reveal">
-            <p className="eyebrow">The Kensei Standard</p>
-            <h2 className="section-title">Why Enthusiasts Choose Kensei Motors</h2>
+            <p className="eyebrow">The Nexus Standard</p>
+            <h2 className="section-title">Why Enthusiasts Choose Nexus Auto SA</h2>
             <p className="section-sub">
               We aren't a generic high-volume lot. We are lifelong automotive enthusiasts dedicated to bringing the cleanest Japanese machinery to Adelaide.
             </p>
@@ -371,7 +371,7 @@ export default function Home() {
             <p className="eyebrow">Verified Adelaide Customers</p>
             <h2 className="section-title">What Our Drivers Say</h2>
             <p className="section-sub">
-              Read real feedback from Adelaide car enthusiasts who trusted Kensei Motors for their dream Japanese vehicles.
+              Read real feedback from Adelaide car enthusiasts who trusted Nexus Auto SA for their dream Japanese vehicles.
             </p>
           </div>
 
@@ -406,7 +406,7 @@ export default function Home() {
             <p className="eyebrow cyan">Got Questions?</p>
             <h2 className="section-title">Frequently Asked Questions</h2>
             <p className="section-sub">
-              Everything you need to know about purchasing, importing, compliance, and warranty coverage with Kensei Motors.
+              Everything you need to know about purchasing, importing, compliance, and warranty coverage with Nexus Auto SA.
             </p>
           </div>
           <div className="reveal">
@@ -421,7 +421,7 @@ export default function Home() {
           <div className="cta-banner reveal">
             <div>
               <p className="eyebrow" style={{ marginBottom: 12 }}>Ready for the next step?</p>
-              <h2 className="cta-title">Visit Our Prospect Showroom or Source from Japan</h2>
+              <h2 className="cta-title">Visit Our Clapham Showroom or Source from Japan</h2>
               <p className="cta-sub">
                 Book a private inspection of our current yard stock, or talk to our import specialists 
                 to locate your dream Japanese vehicle in tomorrow's auction lane.

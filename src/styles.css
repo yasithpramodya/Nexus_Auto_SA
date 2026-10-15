@@ -1,5 +1,5 @@
 /* ============================================================
-   KENSEI MOTORS — Premium Design System v2
+   NEXUS AUTO SA — Premium Design System v2
    ============================================================ */
 
 /* ── Google Fonts ──────────────────────────────────────────── */
@@ -1436,7 +1436,7 @@ ul { list-style: none; }
   animation: fadeInModal .2s ease;
 }
 
-/* ── Feature panels (Why Kensei) ────────────────────────────── */
+/* ── Feature panels (Why Nexus Auto SA) ────────────────────── */
 .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
 .feature-card {

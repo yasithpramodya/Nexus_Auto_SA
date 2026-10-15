@@ -27,12 +27,12 @@ import hero from '../assets/cars/hero.jpg';
 export const heroImage = hero;
 
 export const business = {
-  name: 'Kensei Motors',
+  name: 'Nexus Auto SA',
   tagline: 'Adelaide’s Premier Japanese Import & Performance Specialist',
-  phone: '(08) 8344 1988',
-  mobile: '+61 412 888 333',
-  email: 'sales@kenseimotors.com.au',
-  address: '142 Main North Road, Prospect, Adelaide SA 5082',
+  phone: '(08) 7113 3287',
+  mobile: '0415 993 511',
+  email: 'sales@nexusautosa.com.au',
+  address: 'U1 106 Springbank Road, Clapham SA 5062',
   licence: 'LMVD 294810',
   hours: [
     { day: 'Mon – Fri', sales: '8:30am – 5:30pm', service: '8:30am – 5:00pm' },

@@ -31,7 +31,7 @@ export default function Contact() {
     email: '',
     phone: '',
     topic: topicParam || (carParam ? 'Buying a car' : topics[0]),
-    message: messageParam || (carParam ? `Hi Kensei Motors, I am interested in inspecting the ${carParam}. Is it currently available for viewing in Adelaide?` : ''),
+    message: messageParam || (carParam ? `Hi Nexus Auto SA, I am interested in inspecting the ${carParam}. Is it currently available for viewing in Adelaide?` : ''),
   });
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Contact() {
       setForm((f) => ({
         ...f,
         topic: 'Buying a car',
-        message: f.message || `Hi Kensei Motors, I am interested in inspecting the ${carParam}. Is it currently available for viewing in Adelaide?`,
+        message: f.message || `Hi Nexus Auto SA, I am interested in inspecting the ${carParam}. Is it currently available for viewing in Adelaide?`,
       }));
     } else if (topicParam) {
       setForm((f) => ({ ...f, topic: topicParam }));
@@ -75,10 +75,10 @@ export default function Contact() {
       <section className="page-hero" ref={heroRef}>
         <div className="page-hero-glow" aria-hidden="true" />
         <div className="wrap page-hero-inner">
-          <p className="eyebrow gold reveal">Connect with Kensei Motors Adelaide</p>
+          <p className="eyebrow gold reveal">Connect with Nexus Auto SA Adelaide</p>
           <h1 className="reveal delay-1">Visit or Contact Us</h1>
           <p className="page-hero-sub reveal delay-2">
-            Ask about an in-stock vehicle, arrange a private test drive at our Prospect showroom,
+            Ask about an in-stock vehicle, arrange a private test drive at our Clapham showroom,
             or commission a custom import directly from Japanese auctions.
           </p>
           {/* Quick reasons */}

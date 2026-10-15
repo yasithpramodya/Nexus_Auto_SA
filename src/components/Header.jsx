@@ -62,8 +62,8 @@ export default function Header() {
         <div className="wrap header-inner">
 
           {/* Logo */}
-          <Link to="/" className="logo" onClick={() => setOpen(false)} aria-label="Kensei Motors — home">
-            <span className="logo-icon" aria-hidden="true">剣</span>
+          <Link to="/" className="logo" onClick={() => setOpen(false)} aria-label={`${business.name} — home`}>
+            <span className="logo-icon" aria-hidden="true">N</span>
             <span>
               <div className="logo-name">{business.name}</div>
               <div className="logo-tagline">Import · Sales · Adelaide</div>

@@ -1,4 +1,4 @@
-# Kensei Motors – React JS website
+# Nexus Auto SA – React JS website
 
 Built with **React 19**, **Vite** and **React Router**. Plain CSS, no UI library.
 

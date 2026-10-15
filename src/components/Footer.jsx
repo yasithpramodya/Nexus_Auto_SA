@@ -11,8 +11,8 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="footer-brand">
-            <Link to="/" className="logo" aria-label="Kensei Motors">
-              <span className="logo-icon" aria-hidden="true">剣</span>
+            <Link to="/" className="logo" aria-label={business.name}>
+              <span className="logo-icon" aria-hidden="true">N</span>
               <span>
                 <div className="logo-name">{business.name}</div>
                 <div className="logo-tagline">Import · Sales · Adelaide</div>
