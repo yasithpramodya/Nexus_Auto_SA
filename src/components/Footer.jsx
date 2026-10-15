@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { business } from '../data/vehicles.js';
 import { FacebookIcon, InstagramIcon, MailIcon, PhoneIcon } from './Icons.jsx';
+import nexusEmblem from '../assets/logo/nexus-emblem.svg';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -12,10 +13,14 @@ export default function Footer() {
           {/* Brand column */}
           <div className="footer-brand">
             <Link to="/" className="logo" aria-label={business.name}>
-              <span className="logo-icon" aria-hidden="true">N</span>
+              <div className="logo-emblem-wrap" aria-hidden="true">
+                <img src={nexusEmblem} alt="" className="logo-emblem-img" />
+              </div>
               <span>
                 <div className="logo-name">{business.name}</div>
-                <div className="logo-tagline">Import · Sales · Adelaide</div>
+                <div className="logo-tagline">
+                  <span style={{ color: 'var(--red)', fontWeight: 700 }}>Experience Excellence</span> · Adelaide
+                </div>
               </span>
             </Link>
             <p className="footer-brand-text">

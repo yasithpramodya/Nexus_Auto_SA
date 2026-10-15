@@ -28,7 +28,7 @@ export const heroImage = hero;
 
 export const business = {
   name: 'Nexus Auto SA',
-  tagline: 'Adelaide’s Premier Japanese Import & Performance Specialist',
+  tagline: 'Experience Excellence · Adelaide',
   phone: '(08) 7113 3287',
   mobile: '0415 993 511',
   email: 'sales@nexusautosa.com.au',

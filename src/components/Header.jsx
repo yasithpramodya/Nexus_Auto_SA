@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { business } from '../data/vehicles.js';
 import { PhoneIcon, MapPinIcon, ArrowRightIcon } from './Icons.jsx';
+import nexusEmblem from '../assets/logo/nexus-emblem.svg';
 
 const links = [
   { to: '/',        label: 'Home'     },
@@ -63,10 +64,14 @@ export default function Header() {
 
           {/* Logo */}
           <Link to="/" className="logo" onClick={() => setOpen(false)} aria-label={`${business.name} — home`}>
-            <span className="logo-icon" aria-hidden="true">N</span>
+            <div className="logo-emblem-wrap" aria-hidden="true">
+              <img src={nexusEmblem} alt="" className="logo-emblem-img" />
+            </div>
             <span>
               <div className="logo-name">{business.name}</div>
-              <div className="logo-tagline">Import · Sales · Adelaide</div>
+              <div className="logo-tagline">
+                <span style={{ color: 'var(--red)', fontWeight: 700 }}>Experience Excellence</span> · Adelaide
+              </div>
             </span>
           </Link>
 

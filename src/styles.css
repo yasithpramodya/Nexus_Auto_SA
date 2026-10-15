@@ -379,6 +379,33 @@ ul { list-style: none; }
   flex-shrink: 0;
 }
 .logo:hover .logo-icon { transform: rotate(-8deg) scale(1.1); box-shadow: 0 6px 28px var(--red-glow); }
+
+.logo-emblem-wrap {
+  width: 58px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: rgba(18, 18, 28, 0.9);
+  border: 1px solid var(--border-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 7px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4), 0 0 16px rgba(232,25,44,0.18);
+  transition: transform var(--t-spring), border-color var(--t-fast), box-shadow var(--t-med);
+  flex-shrink: 0;
+}
+.logo:hover .logo-emblem-wrap {
+  transform: translateY(-2px);
+  border-color: rgba(232,25,44,0.45);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.5), 0 0 24px rgba(232,25,44,0.35);
+}
+.logo-emblem-img {
+  width: 100%;
+  height: auto;
+  max-height: 24px;
+  object-fit: contain;
+  display: block;
+}
 .logo-name {
   font-size: 20px;
   font-weight: 900;
