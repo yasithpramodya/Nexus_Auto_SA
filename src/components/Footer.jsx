@@ -19,20 +19,14 @@ export default function Footer() {
               <span>
                 <div className="logo-name">{business.name}</div>
                 <div className="logo-tagline">
-                  <span style={{ color: 'var(--red)', fontWeight: 700 }}>Experience Excellence</span> · Adelaide
+                  <span style={{ color: 'var(--red)', fontWeight: 700 }}>Japanese Imports</span> · Australia &amp; Sri Lanka
                 </div>
               </span>
             </Link>
             <p className="footer-brand-text">
-              Locally owned Japanese vehicle importer and dealer in Adelaide. Hand-picked JDM icons, luxury sedans, and rare classics sourced directly from Japan.
+              Connecting customers in Australia and Sri Lanka with quality used vehicles and Japanese imports. We help customers discover vehicles that suit their lifestyle, needs, and budgets.
             </p>
             <div className="footer-socials">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="social-btn" aria-label="Facebook" title="Facebook">
-                <FacebookIcon size={16} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="social-btn" aria-label="Instagram" title="Instagram">
-                <InstagramIcon size={16} />
-              </a>
               <a href={`mailto:${business.email}`} className="social-btn" aria-label="Email us" title="Email">
                 <MailIcon size={16} />
               </a>
@@ -44,41 +38,48 @@ export default function Footer() {
 
           {/* Navigation */}
           <div className="footer-col">
-            <h4>Navigation</h4>
+            <h4>Quick Navigation</h4>
             <ul>
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/vehicles">Showroom Vehicles</Link></li>
+              <li><Link to="/vehicles">Import Catalog</Link></li>
               <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/contact">Contact &amp; Location</Link></li>
+              <li><Link to="/request-a-car">Request a Car</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Vehicle Categories */}
           <div className="footer-col">
-            <h4>Services</h4>
+            <h4>Vehicle Categories</h4>
             <ul>
-              <li>Direct Auction Imports</li>
-              <li>ADR Compliance &amp; SA Rego</li>
-              <li>Pre-Delivery Service &amp; Detail</li>
-              <li>Private Yard Test Drives</li>
-              <li>Nationwide Enclosed Transport</li>
+              <li><Link to="/vehicles?category=Hatchbacks">Fuel-Efficient Hatchbacks</Link></li>
+              <li><Link to="/vehicles?category=Sedans">Comfortable Sedans</Link></li>
+              <li><Link to="/vehicles?category=SUVs">Spacious SUVs</Link></li>
+              <li><Link to="/vehicles?category=Family">Family Vehicles</Link></li>
+              <li><Link to="/vehicles?category=Specialty">Japanese Imports</Link></li>
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Regional Operations & Contact */}
           <div className="footer-col">
-            <h4>Contact</h4>
+            <h4>Customer Support</h4>
             <ul>
               <li>
                 <a href={`tel:${business.phone.replace(/\s/g,'')}`}>{business.phone}</a>
               </li>
               <li>
+                <a href={`tel:${business.mobile.replace(/\s/g,'')}`}>{business.mobile}</a>
+              </li>
+              <li>
                 <a href={`mailto:${business.email}`}>{business.email}</a>
               </li>
-              <li>{business.address}</li>
-              <li style={{ marginTop: 8, color: 'var(--ink-3)' }}>
-                Mon–Fri 8:30am–5:30pm<br />
-                Sat 9:00am–4:00pm
+              <li style={{ marginTop: 8, color: 'var(--ink-2)' }}>
+                Operating in Australia &amp; Sri Lanka
+              </li>
+              <li style={{ marginTop: 12 }}>
+                <Link to="/admin" style={{ fontSize: '11.5px', color: 'var(--ink-3)', textDecoration: 'underline' }}>
+                  Admin Portal
+                </Link>
               </li>
             </ul>
           </div>
@@ -87,9 +88,9 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="footer-bottom">
-          <span>© {year} {business.name}. All rights reserved.</span>
+          <span>© {year} {business.name}. Bringing Quality Japanese Cars Closer to You.</span>
           <span>
-            {business.licence} · Adelaide, South Australia
+            Quality Used Cars &amp; Japanese Vehicle Imports · Australia &amp; Sri Lanka
           </span>
         </div>
       </div>

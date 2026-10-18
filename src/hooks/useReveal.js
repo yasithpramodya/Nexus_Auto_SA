@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
  * and toggles the "in" class on any child that has "reveal", "reveal-left", or
  * "reveal-right" when it enters the viewport.
  */
-export function useReveal(threshold = 0.1) {
+export function useReveal(threshold = 0.02, rootMargin = '150px 0px 50px 0px') {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -16,14 +16,20 @@ export function useReveal(threshold = 0.1) {
       ? container.querySelectorAll('.reveal, .reveal-left, .reveal-right')
       : [container];
 
-    if (!targets.length) {
-      // Treat the container itself as the target
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) { entry.target.classList.add('in'); obs.unobserve(entry.target); } },
-        { threshold }
-      );
-      obs.observe(container);
-      return () => obs.disconnect();
+    const elementList = targets.length ? Array.from(targets) : [container];
+
+    // Immediately reveal anything already near or inside viewport
+    const vh = window.innerHeight || 800;
+    elementList.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= vh + 150) {
+        el.classList.add('in');
+      }
+    });
+
+    if (typeof IntersectionObserver === 'undefined') {
+      elementList.forEach((el) => el.classList.add('in'));
+      return;
     }
 
     const obs = new IntersectionObserver(
@@ -35,12 +41,17 @@ export function useReveal(threshold = 0.1) {
           }
         });
       },
-      { threshold }
+      { threshold, rootMargin }
     );
 
-    targets.forEach((t) => obs.observe(t));
+    elementList.forEach((t) => {
+      if (!t.classList.contains('in')) {
+        obs.observe(t);
+      }
+    });
+
     return () => obs.disconnect();
-  }, [threshold]);
+  }, [threshold, rootMargin]);
 
   return ref;
 }

@@ -112,12 +112,12 @@ export default function VehicleModal({ vehicle, onClose }) {
           {/* Pricing & Status Box */}
           <div className="va-price-box">
             <div>
-              <div className="va-price-amount">{vehicle.priceDisplay}</div>
+              <div className="va-price-amount" style={{ color: 'var(--gold)', fontSize: '1.4rem' }}>{vehicle.priceDisplay}</div>
               <div className="va-price-sub">{vehicle.priceNote}</div>
             </div>
             <div className="badge badge-green" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               <CheckIcon size={12} />
-              SA Rego &amp; Compliance Certified
+              {vehicle.availability || vehicle.status}
             </div>
           </div>
 
@@ -129,20 +129,22 @@ export default function VehicleModal({ vehicle, onClose }) {
           {/* Full Specifications Grid */}
           <div>
             <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.02em' }}>
-              Full Specifications &amp; Compliance Data
+              Vehicle Specifications
             </h3>
             <dl className="specs-grid">
               {[
-                { label: 'Odometer', value: formatKm(vehicle.odometerKm) },
+                { label: 'Make & Model', value: `${vehicle.make} ${vehicle.model}` },
+                { label: 'Year', value: vehicle.year },
+                { label: 'Mileage', value: formatKm(vehicle.odometerKm) },
                 { label: 'Transmission', value: vehicle.transmission },
+                { label: 'Fuel Type', value: vehicle.fuelType },
+                { label: 'Body Style', value: vehicle.bodyStyle },
                 { label: 'Engine', value: vehicle.engine },
                 { label: 'Drive Type', value: vehicle.drive },
-                { label: 'Body Style', value: vehicle.bodyStyle },
                 { label: 'Exterior Colour', value: vehicle.colour },
                 { label: 'Seating Capacity', value: `${vehicle.seats} Seats` },
-                { label: 'Auction Grade', value: `${vehicle.auctionGrade} (Verified USS)` },
-                { label: 'ADR Compliance', value: 'Complete & Certified' },
-                { label: 'Registration', value: 'South Australia (Included)' },
+                { label: 'Condition', value: vehicle.condition || 'Quality Used Import' },
+                { label: 'Location', value: vehicle.location },
               ].map(({ label, value }) => (
                 <div className="spec-cell" key={label}>
                   <dt className="spec-label">{label}</dt>
@@ -152,11 +154,11 @@ export default function VehicleModal({ vehicle, onClose }) {
             </dl>
           </div>
 
-          {/* Key Features & Japanese Logbook Checklist */}
+          {/* Key Features */}
           {vehicle.features && (
             <div>
               <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.02em' }}>
-                Factory Highlights &amp; Certified Inclusions
+                Factory Highlights &amp; Inclusions
               </h3>
               <div className="va-highlights-list">
                 {vehicle.features.map((feat) => (
@@ -171,26 +173,30 @@ export default function VehicleModal({ vehicle, onClose }) {
             </div>
           )}
 
+          {/* Import Notice */}
+          <div style={{ background: 'rgba(232,25,44,0.06)', border: '1px solid rgba(232,25,44,0.2)', padding: '12px 16px', borderRadius: 'var(--r-md)', fontSize: '0.86rem', color: 'var(--ink-2)' }}>
+            <strong style={{ color: 'var(--ink)' }}>Direct Import on Request:</strong> This vehicle is available to import to Australia or Sri Lanka. We source directly from Japanese dealer auctions upon your request—no showroom floor markups.
+          </div>
+
           {/* Action CTAs */}
           <div className="va-actions" style={{ paddingTop: 16, borderTop: '1px solid var(--border)' }}>
             <Link
-              to={`/contact?car=${encodeURIComponent(vehicle.title)}`}
+              to={`/request-a-car?make=${encodeURIComponent(vehicle.make)}&model=${encodeURIComponent(vehicle.model)}&year=${vehicle.year}&id=${encodeURIComponent(vehicle.id)}`}
               className="btn btn-primary"
               onClick={onClose}
-              id={`modal-enquire-${vehicle.id}`}
+              id={`modal-request-${vehicle.id}`}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
             >
-              <span>Enquire About This Vehicle</span>
+              <span>Request to Import This Car</span>
               <ArrowRightIcon size={14} />
             </Link>
-            <a
-              href={`tel:${business.phone.replace(/\s/g,'')}`}
+            <Link
+              to={`/vehicles/${vehicle.id}`}
               className="btn btn-ghost"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+              onClick={onClose}
             >
-              <PhoneIcon size={14} />
-              Call {business.phone}
-            </a>
+              View Full Vehicle Specs
+            </Link>
           </div>
 
         </div>

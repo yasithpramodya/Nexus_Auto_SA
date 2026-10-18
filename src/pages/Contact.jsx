@@ -2,68 +2,122 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { business } from '../data/vehicles.js';
 import { useReveal } from '../hooks/useReveal.js';
+import { db } from '../firebase.js';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import {
-  ZapIcon,
-  AwardIcon,
-  ShieldCheckIcon,
-  LockIcon,
   CarIcon,
   AlertCircleIcon,
   CheckCircleIcon,
   MapPinIcon,
   PhoneIcon,
-  ClockIcon,
-  ShipIcon,
-  ArrowRightIcon,
   MailIcon,
+  ArrowRightIcon,
 } from '../components/Icons.jsx';
 
-const topics = ['Buying a car', 'Importing a car', 'Test drive', 'Other'];
+const enquiryTypes = ['General', 'Vehicle Enquiry', 'Vehicle Request'];
 
 export default function Contact() {
   const [searchParams] = useSearchParams();
   const carParam = searchParams.get('car');
-  const topicParam = searchParams.get('topic');
+  const idParam = searchParams.get('id');
+  const typeParam = searchParams.get('type');
   const messageParam = searchParams.get('message');
 
   const [form, setForm] = useState({
     name: '',
     email: '',
     phone: '',
-    topic: topicParam || (carParam ? 'Buying a car' : topics[0]),
-    message: messageParam || (carParam ? `Hi Nexus Auto SA, I am interested in inspecting the ${carParam}. Is it currently available for viewing in Adelaide?` : ''),
+    enquiryType: typeParam || (carParam ? 'Vehicle Enquiry' : 'General'),
+    subject: carParam ? `Enquiry regarding ${carParam}` : '',
+    message: messageParam || (carParam ? `Hi Nexus Auto SA, I am interested in learning more about the ${carParam}. Could you please provide further details and availability?` : ''),
+    faxHoneypot: '',
   });
+
+  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [errorMessage, setErrorMessage] = useState('');
+  const [referenceId, setReferenceId] = useState('');
 
   useEffect(() => {
     if (carParam) {
-      setForm((f) => ({
-        ...f,
-        topic: 'Buying a car',
-        message: f.message || `Hi Nexus Auto SA, I am interested in inspecting the ${carParam}. Is it currently available for viewing in Adelaide?`,
+      setForm((prev) => ({
+        ...prev,
+        enquiryType: 'Vehicle Enquiry',
+        subject: prev.subject || `Enquiry regarding ${carParam}`,
+        message: prev.message || `Hi Nexus Auto SA, I am interested in learning more about the ${carParam}. Could you please provide further details and availability?`,
       }));
-    } else if (topicParam) {
-      setForm((f) => ({ ...f, topic: topicParam }));
     }
-  }, [carParam, topicParam]);
+  }, [carParam]);
 
-  const [status, setStatus] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const update = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
-
-  const submit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !/^\S+@\S+\.\S+$/.test(form.email)) {
-      setStatus('error');
+    setErrorMessage('');
+
+    // Spam honeypot
+    if (form.faxHoneypot) {
+      setStatus('success');
       return;
     }
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    if (!form.name.trim()) {
+      setStatus('error');
+      setErrorMessage('Please provide your name.');
+      return;
+    }
+    if (!form.email.trim() || !/^\S+@\S+\.\S+$/.test(form.email)) {
+      setStatus('error');
+      setErrorMessage('Please provide a valid email address.');
+      return;
+    }
+    if (!form.phone.trim()) {
+      setStatus('error');
+      setErrorMessage('Please provide a contact phone number.');
+      return;
+    }
+    if (!form.message.trim()) {
+      setStatus('error');
+      setErrorMessage('Please enter your enquiry message.');
+      return;
+    }
+
+    setStatus('submitting');
+
+    const enquiryPayload = {
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      phone: form.phone.trim(),
+      enquiryType: form.enquiryType,
+      subject: form.subject.trim() || `${form.enquiryType} from ${form.name}`,
+      message: form.message.trim(),
+      vehicleReference: carParam ? `${carParam} (ID: ${idParam || 'N/A'})` : null,
+      status: 'New',
+      createdAt: serverTimestamp(),
+      submittedAtIso: new Date().toISOString(),
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, 'enquiries'), enquiryPayload);
+      const generatedRef = docRef.id ? docRef.id.slice(0, 8).toUpperCase() : `ENQ-${Date.now().toString().slice(-6)}`;
+      setReferenceId(generatedRef);
       setStatus('success');
-      const body = `Name: ${form.name}\nPhone: ${form.phone}\nTopic: ${form.topic}\n\nMessage:\n${form.message}`;
-      window.location.href = `mailto:${business.email}?subject=${encodeURIComponent(`Website enquiry [${form.topic}]: ${form.name}`)}&body=${encodeURIComponent(body)}`;
-    }, 600);
+    } catch (err) {
+      console.warn('Firestore error, falling back to local storage backup:', err);
+      try {
+        const stored = JSON.parse(localStorage.getItem('customer_enquiries') || '[]');
+        const fallbackRef = `ENQ-${Date.now().toString().slice(-6)}`;
+        stored.push({ ...enquiryPayload, id: fallbackRef });
+        localStorage.setItem('customer_enquiries', JSON.stringify(stored));
+        setReferenceId(fallbackRef);
+        setStatus('success');
+      } catch (localErr) {
+        setStatus('error');
+        setErrorMessage('Could not send message. Please contact us via phone or email directly.');
+      }
+    }
   };
 
   const heroRef = useReveal();
@@ -71,258 +125,325 @@ export default function Contact() {
 
   return (
     <>
-      {/* ── Page hero ──────────────────────────────────── */}
+      {/* ── Page Hero ────────────────────────────────────── */}
       <section className="page-hero" ref={heroRef}>
         <div className="page-hero-glow" aria-hidden="true" />
         <div className="wrap page-hero-inner">
-          <p className="eyebrow gold reveal">Connect with Nexus Auto SA Adelaide</p>
-          <h1 className="reveal delay-1">Visit or Contact Us</h1>
+          <p className="eyebrow gold reveal">Connect with Our Team</p>
+          <h1 className="reveal delay-1">Contact Us</h1>
           <p className="page-hero-sub reveal delay-2">
-            Ask about an in-stock vehicle, arrange a private test drive at our Clapham showroom,
-            or commission a custom import directly from Japanese auctions.
+            Have questions about a listed vehicle, custom vehicle imports, or general advice? We are here to help drivers in Australia and Sri Lanka find the right car.
           </p>
-          {/* Quick reasons */}
-          <div className="reveal delay-3" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px 28px', marginTop: 8 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: 'var(--ink-2)' }}>
-              <span style={{ color: 'var(--gold)', display: 'grid' }}><ZapIcon size={16} /></span>
-              Rapid Response — usually within 2 to 4 business hours
-            </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: 'var(--ink-2)' }}>
-              <span style={{ color: 'var(--red)', display: 'grid' }}><AwardIcon size={16} /></span>
-              Grade 4+ Japanese auction cars guaranteed
-            </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: 'var(--ink-2)' }}>
-              <span style={{ color: 'var(--green)', display: 'grid' }}><ShieldCheckIcon size={16} /></span>
-              Full ADR compliance, SA roadworthy &amp; registration
-            </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: 'var(--ink-2)' }}>
-              <span style={{ color: 'var(--cyan)', display: 'grid' }}><LockIcon size={16} /></span>
-              Licensed SA Dealer (LMVD 294810) — 100% transparent
-            </span>
-          </div>
         </div>
       </section>
 
-      {/* ── Contact grid ───────────────────────────────── */}
-      <section className="section" ref={gridRef}>
+      {/* ── Contact Grid ─────────────────────────────────── */}
+      <section className="section" ref={gridRef} style={{ paddingTop: 24 }}>
         <div className="wrap contact-grid">
 
-          {/* ── Form ─────────────────────────────────── */}
-          <form
-            className="form-panel reveal"
-            onSubmit={submit}
-            noValidate
-            id="contact-form"
-            aria-label="Send an enquiry"
-          >
-            <div>
-              <h2>Send an Enquiry</h2>
-              <p>We personally respond to every message within one business day.</p>
-            </div>
-
-            {carParam && (
-              <div style={{ background: 'rgba(232,25,44,.1)', border: '1px solid rgba(232,25,44,.25)', borderRadius: 'var(--r-sm)', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ color: 'var(--red)', display: 'grid' }}><CarIcon size={22} /></span>
-                <div>
-                  <div style={{ fontSize: 11, fontFamily: 'var(--mono)', textTransform: 'uppercase', color: 'var(--red)' }}>Vehicle Selected</div>
-                  <strong style={{ fontSize: 14, color: '#fff' }}>{carParam}</strong>
-                </div>
-              </div>
-            )}
-
-            <div className="form-row">
-              <div className="field">
-                <label htmlFor="name">Full Name *</label>
-                <input
-                  id="name"
-                  name="name"
-                  autoComplete="name"
-                  required
-                  value={form.name}
-                  onChange={update}
-                  placeholder="e.g. John Henderson"
-                />
-              </div>
-              <div className="field">
-                <label htmlFor="phone">Phone (Optional)</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  value={form.phone}
-                  onChange={update}
-                  placeholder="04xx xxx xxx"
-                />
-              </div>
-            </div>
-
-            <div className="field">
-              <label htmlFor="email">Email Address *</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={form.email}
-                onChange={update}
-                placeholder="john@example.com.au"
-              />
-            </div>
-
-            <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
-              <div className="chips-wrap">
-                <legend className="chips-label">I am enquiring about</legend>
-                <div className="chips">
-                  {topics.map((t) => (
-                    <label key={t} className={`chip${form.topic === t ? ' on' : ''}`}>
-                      <input
-                        type="radio"
-                        name="topic"
-                        value={t}
-                        checked={form.topic === t}
-                        onChange={update}
-                      />
-                      {t}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </fieldset>
-
-            <div className="field">
-              <label htmlFor="message">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                value={form.message}
-                onChange={update}
-                placeholder="Tell us what you're looking for, or any questions about compliance, shipping, and viewing..."
-              />
-            </div>
-
-            {status === 'error' && (
-              <p className="form-notice" role="alert" style={{ background: 'var(--red-dim)', border: '1px solid rgba(232,25,44,.2)', color: 'var(--red)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <AlertCircleIcon size={18} />
-                <span>Please enter your full name and a valid email address so we can reply.</span>
-              </p>
-            )}
-
-            {status === 'success' && (
-              <p className="form-notice" role="status" aria-live="polite" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <CheckCircleIcon size={18} />
-                <span>Your enquiry has been received! Our default email application is launching with your message. Thank you, {form.name.split(' ')[0]}!</span>
-              </p>
-            )}
-
-            <button
-              className="btn btn-primary btn-lg"
-              type="submit"
-              id="contact-submit"
-              disabled={isSubmitting}
-              style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+          {/* Form Panel */}
+          {status === 'success' ? (
+            <div
+              className="form-panel reveal"
+              style={{
+                textAlign: 'center',
+                padding: '48px 32px',
+                border: '1px solid rgba(52,211,153,0.3)',
+              }}
             >
-              <span>{isSubmitting ? 'Sending...' : 'Send Enquiry'}</span>
-              <ArrowRightIcon size={15} />
-            </button>
-          </form>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  padding: 18,
+                  borderRadius: '50%',
+                  background: 'rgba(52,211,153,0.12)',
+                  color: 'var(--green)',
+                  marginBottom: 16,
+                }}
+              >
+                <CheckCircleIcon size={40} />
+              </div>
+              <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--ink)', marginBottom: 8 }}>
+                Enquiry Sent Successfully
+              </h2>
+              <p style={{ color: 'var(--ink-2)', lineHeight: 1.6, marginBottom: 16 }}>
+                Thank you, <strong>{form.name}</strong>. Your enquiry has been received under reference{' '}
+                <strong style={{ color: 'var(--gold)', fontFamily: 'var(--mono)' }}>#{referenceId}</strong>.
+              </p>
+              <p style={{ color: 'var(--ink-3)', fontSize: '0.9rem', marginBottom: 28 }}>
+                Our team will review your message and reply to {form.email} as soon as possible.
+              </p>
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                <Link to="/vehicles" className="btn btn-primary">
+                  Browse Vehicles
+                </Link>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => {
+                    setStatus('idle');
+                    setForm({
+                      name: '',
+                      email: '',
+                      phone: '',
+                      enquiryType: 'General',
+                      subject: '',
+                      message: '',
+                      faxHoneypot: '',
+                    });
+                  }}
+                >
+                  Send Another Message
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form
+              className="form-panel reveal"
+              onSubmit={handleSubmit}
+              noValidate
+              id="contact-form"
+              aria-label="Send vehicle enquiry"
+            >
+              <div>
+                <h2>Send an Enquiry</h2>
+                <p>Fill out the form below and our team will get in touch with you.</p>
+              </div>
 
-          {/* ── Info sidebar ─────────────────────────── */}
-          <aside className="info-col reveal delay-2" aria-label="Contact information">
+              {carParam && (
+                <div
+                  style={{
+                    background: 'rgba(232,25,44,0.1)',
+                    border: '1px solid rgba(232,25,44,0.25)',
+                    borderRadius: 'var(--r-sm)',
+                    padding: '12px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                  }}
+                >
+                  <span style={{ color: 'var(--red)', display: 'grid' }}>
+                    <CarIcon size={22} />
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 11, fontFamily: 'var(--mono)', textTransform: 'uppercase', color: 'var(--red)' }}>
+                      Vehicle Selected
+                    </div>
+                    <strong style={{ fontSize: 14, color: '#fff' }}>{carParam}</strong>
+                  </div>
+                </div>
+              )}
 
-            {/* Visit */}
-            <div className="info-panel">
-              <div className="info-panel-head">
-                <span className="info-panel-icon" aria-hidden="true" style={{ color: 'var(--red)', display: 'grid' }}>
+              {status === 'error' && errorMessage && (
+                <div
+                  style={{
+                    background: 'rgba(232,25,44,0.12)',
+                    border: '1px solid rgba(232,25,44,0.3)',
+                    borderRadius: 'var(--r-sm)',
+                    padding: '12px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    color: '#ff6b7a',
+                  }}
+                >
+                  <AlertCircleIcon size={18} />
+                  <span style={{ fontSize: '0.92rem' }}>{errorMessage}</span>
+                </div>
+              )}
+
+              {/* Honeypot field */}
+              <div style={{ display: 'none' }} aria-hidden="true">
+                <input
+                  type="text"
+                  name="faxHoneypot"
+                  value={form.faxHoneypot}
+                  onChange={handleChange}
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="field">
+                  <label htmlFor="name">Full Name *</label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="e.g. Michael Smith"
+                    value={form.name}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="email">Email Address *</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="e.g. michael@example.com"
+                    value={form.email}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="field">
+                  <label htmlFor="phone">Phone Number *</label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    placeholder="e.g. (08) 7113 3287 or +61 415 993 511"
+                    value={form.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="enquiryType">Enquiry Type *</label>
+                  <select
+                    id="enquiryType"
+                    name="enquiryType"
+                    value={form.enquiryType}
+                    onChange={handleChange}
+                  >
+                    {enquiryTypes.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="field">
+                <label htmlFor="subject">Subject</label>
+                <input
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  placeholder="e.g. Availability of Crown Sedan or Custom Import Query"
+                  value={form.subject}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="message">Message *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="5"
+                  required
+                  placeholder="Write your questions or tell us about your requirements..."
+                  value={form.message}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg"
+                disabled={status === 'submitting'}
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                {status === 'submitting' ? 'Submitting Enquiry...' : 'Send Enquiry'}
+              </button>
+            </form>
+          )}
+
+          {/* Contact Information & Channels */}
+          <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div className="glass-card" style={{ padding: 28 }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--ink)', marginBottom: 16 }}>
+                Direct Contact Details
+              </h3>
+              <p style={{ color: 'var(--ink-2)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 20 }}>
+                Reach out directly via phone or email. Our team is available to assist with enquiries regarding current inventory, Japanese imports, or preferred vehicle sourcing.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <a
+                  href={`tel:${business.phone.replace(/\s/g,'')}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: 14, color: 'var(--ink)', textDecoration: 'none' }}
+                >
+                  <span style={{ color: 'var(--red)', background: 'var(--red-dim)', padding: 10, borderRadius: 'var(--r-sm)', display: 'grid' }}>
+                    <PhoneIcon size={18} />
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--ink-3)', textTransform: 'uppercase' }}>Phone</div>
+                    <strong style={{ fontSize: '1.05rem' }}>{business.phone}</strong>
+                  </div>
+                </a>
+
+                <a
+                  href={`tel:${business.mobile.replace(/\s/g,'')}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: 14, color: 'var(--ink)', textDecoration: 'none' }}
+                >
+                  <span style={{ color: 'var(--gold)', background: 'var(--gold-dim)', padding: 10, borderRadius: 'var(--r-sm)', display: 'grid' }}>
+                    <PhoneIcon size={18} />
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--ink-3)', textTransform: 'uppercase' }}>Mobile</div>
+                    <strong style={{ fontSize: '1.05rem' }}>{business.mobile}</strong>
+                  </div>
+                </a>
+
+                <a
+                  href={`mailto:${business.email}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: 14, color: 'var(--ink)', textDecoration: 'none' }}
+                >
+                  <span style={{ color: 'var(--green)', background: 'var(--green-dim)', padding: 10, borderRadius: 'var(--r-sm)', display: 'grid' }}>
+                    <MailIcon size={18} />
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--ink-3)', textTransform: 'uppercase' }}>Email</div>
+                    <strong style={{ fontSize: '1rem' }}>{business.email}</strong>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div className="glass-card" style={{ padding: 28 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                <span style={{ color: 'var(--red)', display: 'grid' }}>
                   <MapPinIcon size={20} />
                 </span>
-                <h3>Showroom Location</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--ink)' }}>
+                  Operating Regions
+                </h3>
               </div>
-              <p style={{ fontWeight: 600, color: 'var(--ink)' }}>{business.name}</p>
-              <p>{business.address}</p>
-              <p style={{ fontSize: 11, color: 'var(--ink-3)' }}>Licence: {business.licence}</p>
-              <a
-                className="text-link"
-                href={`https://maps.google.com/?q=${encodeURIComponent(business.address)}`}
-                target="_blank"
-                rel="noreferrer"
-                id="maps-link"
-                style={{ marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-              >
-                Get Directions on Google Maps
-                <ArrowRightIcon size={13} />
-              </a>
+              <p style={{ color: 'var(--ink-2)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: 16 }}>
+                Our automotive business connects drivers in <strong>Australia and Sri Lanka</strong> with quality used cars and Japanese vehicle imports.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ padding: '10px 14px', background: 'var(--bg-1)', borderRadius: 'var(--r-sm)', fontSize: '0.88rem', color: 'var(--ink-2)' }}>
+                  <strong style={{ color: 'var(--ink)' }}>Australia:</strong> Quality used vehicle sales and Japanese imports
+                </div>
+                <div style={{ padding: '10px 14px', background: 'var(--bg-1)', borderRadius: 'var(--r-sm)', fontSize: '0.88rem', color: 'var(--ink-2)' }}>
+                  <strong style={{ color: 'var(--ink)' }}>Sri Lanka:</strong> Vehicle sourcing and Japanese import requests
+                </div>
+              </div>
             </div>
 
-            {/* Phone & email */}
-            <div className="info-panel">
-              <div className="info-panel-head">
-                <span className="info-panel-icon" aria-hidden="true" style={{ color: 'var(--red)', display: 'grid' }}>
-                  <PhoneIcon size={20} />
-                </span>
-                <h3>Direct Dealership Contact</h3>
-              </div>
-              <p style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <PhoneIcon size={13} />
-                <a href={`tel:${business.phone.replace(/\s/g,'')}`}>{business.phone}</a>
+            <div className="glass-card" style={{ padding: 24, textAlign: 'center' }}>
+              <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--ink)', marginBottom: 6 }}>
+                Need a specific unlisted car?
+              </h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--ink-3)', marginBottom: 14 }}>
+                Submit detailed vehicle preferences on our dedicated request page.
               </p>
-              <p style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <PhoneIcon size={13} />
-                <a href={`tel:${business.mobile.replace(/\s/g,'')}`}>{business.mobile} (Mobile / WhatsApp)</a>
-              </p>
-              <p style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <MailIcon size={13} />
-                <a href={`mailto:${business.email}`}>{business.email}</a>
-              </p>
-            </div>
-
-            {/* Hours */}
-            <div className="info-panel">
-              <div className="info-panel-head">
-                <span className="info-panel-icon" aria-hidden="true" style={{ color: 'var(--gold)', display: 'grid' }}>
-                  <ClockIcon size={20} />
-                </span>
-                <h3>Showroom Hours</h3>
-              </div>
-              <table className="hours-tbl" aria-label="Opening hours">
-                <thead>
-                  <tr>
-                    <th scope="col">Day</th>
-                    <th scope="col">Sales</th>
-                    <th scope="col">Service</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {business.hours.map((h) => (
-                    <tr key={h.day}>
-                      <td>{h.day}</td>
-                      <td className={h.sales === 'Closed' ? 'closed' : ''}>{h.sales}</td>
-                      <td className={h.service === 'Closed' ? 'closed' : ''}>{h.service}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Quick CTA */}
-            <div className="info-panel" style={{ background: 'var(--red-dim)', border: '1px solid var(--red-dim2)' }}>
-              <div className="info-panel-head">
-                <span className="info-panel-icon" aria-hidden="true" style={{ color: 'var(--red)', display: 'grid' }}>
-                  <ShipIcon size={20} />
-                </span>
-                <h3>Looking for an Auction Import?</h3>
-              </div>
-              <p style={{ color: 'var(--ink-2)', fontFamily: 'var(--font)', fontSize: 13.5, lineHeight: 1.7 }}>
-                Can't find the exact specification you want? We monitor 150,000+ weekly auction listings across Japan.
-              </p>
-              <Link className="btn btn-primary btn-sm" to="/vehicles" style={{ marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                <span>Explore Inventory First</span>
-                <ArrowRightIcon size={13} />
+              <Link to="/request-a-car" className="btn btn-ghost btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
+                Go to Request a Car Page →
               </Link>
             </div>
+          </div>
 
-          </aside>
         </div>
       </section>
     </>

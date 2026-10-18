@@ -5,10 +5,11 @@ import { PhoneIcon, MapPinIcon, ArrowRightIcon } from './Icons.jsx';
 import nexusEmblem from '../assets/logo/nexus-emblem.svg';
 
 const links = [
-  { to: '/',        label: 'Home'     },
-  { to: '/vehicles', label: 'Vehicles' },
-  { to: '/about',   label: 'About Us' },
-  { to: '/contact', label: 'Contact'  },
+  { to: '/',             label: 'Home'           },
+  { to: '/vehicles',     label: 'Import Catalog' },
+  { to: '/about',        label: 'About Us'       },
+  { to: '/request-a-car', label: 'Request a Car'  },
+  { to: '/contact',      label: 'Contact Us'     },
 ];
 
 export default function Header() {
@@ -22,7 +23,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth > 700) setOpen(false); };
+    const onResize = () => { if (window.innerWidth > 768) setOpen(false); };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
@@ -38,22 +39,17 @@ export default function Header() {
       {/* ── Top bar ──────────────────────────────────────── */}
       <div className="topbar" role="banner">
         <div className="wrap topbar-inner">
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <PhoneIcon size={12} />
-            <a href={`tel:${business.phone.replace(/\s/g,'')}`}>{business.phone}</a>
-            <span style={{ opacity: 0.5 }}>·</span>
-            {business.licence}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <PhoneIcon size={12} />
+              <a href={`tel:${business.phone.replace(/\s/g,'')}`}>{business.phone}</a>
+            </span>
+            <span style={{ opacity: 0.4 }}>·</span>
+            <span style={{ color: 'var(--ink-2)' }}>Direct Japanese Imports (Order on Request)</span>
           </span>
-          <span>
-            <a
-              href={`https://maps.google.com/?q=${encodeURIComponent(business.address)}`}
-              target="_blank"
-              rel="noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
-            >
-              <MapPinIcon size={12} />
-              {business.address}
-            </a>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <MapPinIcon size={12} />
+            <span style={{ color: 'var(--ink)' }}>Operating in Australia &amp; Sri Lanka</span>
           </span>
         </div>
       </div>
@@ -70,7 +66,7 @@ export default function Header() {
             <span>
               <div className="logo-name">{business.name}</div>
               <div className="logo-tagline">
-                <span style={{ color: 'var(--red)', fontWeight: 700 }}>Experience Excellence</span> · Adelaide
+                <span style={{ color: 'var(--red)', fontWeight: 700 }}>Japanese Imports</span> · Australia &amp; Sri Lanka
               </div>
             </span>
           </Link>
@@ -95,12 +91,12 @@ export default function Header() {
             <div className="nav-cta">
               <Link
                 className="btn btn-primary btn-sm"
-                to="/contact"
+                to="/request-a-car"
                 id="header-cta"
                 onClick={() => setOpen(false)}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
               >
-                <span>Get in touch</span>
+                <span>Request a Car</span>
                 <ArrowRightIcon size={12} />
               </Link>
             </div>
