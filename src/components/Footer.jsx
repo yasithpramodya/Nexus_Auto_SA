@@ -27,6 +27,12 @@ export default function Footer() {
               Connecting customers in Australia and Sri Lanka with quality used vehicles and Japanese imports. We help customers discover vehicles that suit their lifestyle, needs, and budgets.
             </p>
             <div className="footer-socials">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Facebook" title="Facebook">
+                <FacebookIcon size={16} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Instagram" title="Instagram">
+                <InstagramIcon size={16} />
+              </a>
               <a href={`mailto:${business.email}`} className="social-btn" aria-label="Email us" title="Email">
                 <MailIcon size={16} />
               </a>
@@ -41,9 +47,9 @@ export default function Footer() {
             <h4>Quick Navigation</h4>
             <ul>
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/vehicles">Import Catalog</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/request-a-car">Request a Car</Link></li>
+              <li><Link to="/about">About</Link></li>
+              <li><Link to="/import">Import</Link></li>
+              <li><Link to="/finance">Finance</Link></li>
               <li><Link to="/contact">Contact Us</Link></li>
             </ul>
           </div>

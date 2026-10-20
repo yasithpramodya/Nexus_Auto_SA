@@ -151,13 +151,13 @@ export default function Home() {
 
               {/* Description */}
               <p className="hero-sub">
-                Discover quality used vehicles and Japanese imports available to order. We connect buyers in Australia and Sri Lanka with popular Japanese makes and models sourced direct on request—no showroom floor markups.
+                Discover quality used vehicles and Japanese imports available to order. We connect buyers in Australia and Sri Lanka with popular Japanese makes and models sourced direct upon request. Every car is inspected in Japan and imported directly upon the buyer's request.
               </p>
 
               {/* CTAs */}
               <div className="hero-actions">
                 <Link className="btn btn-primary btn-lg" to="/vehicles" id="hero-explore-stock">
-                  Browse Import Catalog
+                  Browse Import Catalogue
                 </Link>
                 <Link className="btn btn-ghost btn-lg" to="/request-a-car" id="hero-find-car">
                   Request a Custom Import
@@ -167,10 +167,12 @@ export default function Home() {
 
             {/* Floating live inventory overview card */}
             <aside className="hero-floater reveal reveal-right" aria-label="Current stock overview">
-              <div className="floater-head">Import Catalog Overview</div>
+              <div className="floater-head">Import Catalogue Overview</div>
               <div className="floater-stat">
-                <div className="floater-stat-num">{vehicles.length}</div>
-                <div className="floater-stat-label">Import Models<br />Order on Request</div>
+                <div className="floater-stat-num" style={{ fontSize: '1.4rem', letterSpacing: '-0.02em', lineHeight: 1.25 }}>
+                  Directly on Request
+                </div>
+                <div className="floater-stat-label">Japanese Vehicle Imports<br />Inspected Upon Order</div>
               </div>
               <div className="floater-divider" />
               <div className="floater-cars">
@@ -187,7 +189,7 @@ export default function Home() {
                 ))}
               </div>
               <Link className="btn btn-outline btn-sm" to="/vehicles" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }}>
-                Browse All {vehicles.length} Models →
+                Browse Import Catalogue →
               </Link>
             </aside>
           </div>
@@ -204,18 +206,12 @@ export default function Home() {
       <section className="section" ref={featuredRef} style={{ borderTop: '1px solid var(--border)' }}>
         <div className="wrap">
           <div className="section-head reveal">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
-              <div>
-                <p className="eyebrow red">Direct Import Catalog</p>
-                <h2 className="section-title">Popular Japanese Models to Import</h2>
-                <p className="section-sub">
-                  Curated Japanese import models available on request for buyers in Australia and Sri Lanka. We do not operate a showroom lot—every car is inspected in Japan and imported direct upon buyer request.
-                </p>
-              </div>
-              <Link to="/vehicles" className="btn btn-ghost" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span>View All {vehicles.length} Models</span>
-                <ArrowRightIcon size={14} />
-              </Link>
+            <div>
+              <p className="eyebrow red">Direct Import Catalogue</p>
+              <h2 className="section-title">Popular Japanese Models to Import</h2>
+              <p className="section-sub">
+                Curated Japanese import models available on request for buyers in Australia and Sri Lanka. Every car is inspected in Japan and imported directly upon the buyer's request.
+              </p>
             </div>
           </div>
 

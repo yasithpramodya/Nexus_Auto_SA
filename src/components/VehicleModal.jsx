@@ -173,9 +173,9 @@ export default function VehicleModal({ vehicle, onClose }) {
             </div>
           )}
 
-          {/* Import Notice */}
-          <div style={{ background: 'rgba(232,25,44,0.06)', border: '1px solid rgba(232,25,44,0.2)', padding: '12px 16px', borderRadius: 'var(--r-md)', fontSize: '0.86rem', color: 'var(--ink-2)' }}>
-            <strong style={{ color: 'var(--ink)' }}>Direct Import on Request:</strong> This vehicle is available to import to Australia or Sri Lanka. We source directly from Japanese dealer auctions upon your request—no showroom floor markups.
+          {/* Direct Import Information */}
+          <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', padding: '12px 16px', borderRadius: 'var(--r-md)', fontSize: '0.86rem', color: 'var(--ink-2)' }}>
+            <strong style={{ color: 'var(--ink)' }}>Direct Import on Request:</strong> Sourced directly upon your request from Japan for delivery to Australia or Sri Lanka. Every car is inspected in Japan and imported directly upon the buyer's request.
           </div>
 
           {/* Action CTAs */}

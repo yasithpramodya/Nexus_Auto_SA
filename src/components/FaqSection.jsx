@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: 'Do you arrange delivery to Melbourne, Sydney, Brisbane, or Perth?',
-    a: 'Yes. While our showroom is in Clapham, Adelaide, we regularly arrange fully insured enclosed or open freight transport to all Australian capital cities and regional centers at competitive dealer trade rates.',
+    a: 'Yes. We regularly arrange fully insured enclosed or open freight transport to all Australian capital cities and regional centers at competitive dealer trade rates.',
   },
   {
     q: 'Do you offer mechanical warranties and trade-ins?',

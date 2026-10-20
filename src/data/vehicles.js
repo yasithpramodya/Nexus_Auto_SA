@@ -26,7 +26,7 @@ export const business = {
   mobile: '0415 993 511',
   email: 'sales@nexusautosa.com.au',
   address: 'Australia & Sri Lanka Direct Import Operations (Order on Request)',
-  note: 'We operate as a direct vehicle import and sourcing service. Vehicles are not held on a local showroom floor—every vehicle is sourced and imported to your exact requirements.',
+  note: 'We operate as a direct vehicle import and sourcing service. Every vehicle is inspected in Japan and imported directly upon the buyer\'s request to meet your exact requirements.',
   categories: [
     { id: 'hatchbacks', label: 'Fuel-Efficient Hatchbacks', icon: 'zap', desc: 'Practical, economical, and agile city vehicles with outstanding fuel economy.' },
     { id: 'sedans', label: 'Comfortable Sedans', icon: 'car', desc: 'Refined comfort, smooth powertrains, and sophisticated Japanese engineering.' },
@@ -112,7 +112,7 @@ export const vehicles = [
       'Toyota Safety Sense 3.0 with Full Active Driver Assist',
       'Dual 12.3-inch Full Color Digital Cockpit Displays',
       'Premium Black & Red Synthetic Leather Sport Seating',
-      'Zero Showroom Markups — Sourced Direct Upon Your Request',
+      'Direct Japanese Sourcing Upon Your Request',
     ],
   },
   {

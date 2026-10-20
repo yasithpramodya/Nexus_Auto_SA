@@ -308,9 +308,9 @@ export default function WhatWeOffer() {
         <div className="page-hero-glow" aria-hidden="true" />
         <div className="wrap page-hero-inner">
           <p className="eyebrow gold reveal">Direct Japanese Imports · Order on Request</p>
-          <h1 className="reveal delay-1">Import Catalog</h1>
+          <h1 className="reveal delay-1">Import Catalogue</h1>
           <p className="page-hero-sub reveal delay-2">
-            Explore 15 popular Japanese models available to import to Australia and Sri Lanka. We do not keep cars sitting on a showroom floor—every vehicle is sourced and imported direct upon buyer request to meet your exact specifications and budget.
+            Explore popular Japanese models available to import to Australia and Sri Lanka directly on request. Every car is inspected in Japan and imported directly upon the buyer's request to meet your exact specifications and budget.
           </p>
         </div>
       </section>

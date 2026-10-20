@@ -75,7 +75,7 @@ export default function VehicleDetails() {
               </li>
               <li>/</li>
               <li>
-                <Link to="/vehicles" style={{ color: 'var(--ink-2)' }}>Import Catalog</Link>
+                <Link to="/vehicles" style={{ color: 'var(--ink-2)' }}>Import Catalogue</Link>
               </li>
               <li>/</li>
               <li style={{ color: 'var(--ink)' }}>{vehicle.year} {vehicle.title}</li>
@@ -257,9 +257,9 @@ export default function VehicleDetails() {
                   ))}
                 </dl>
 
-                {/* Direct Import Notice */}
-                <div style={{ background: 'rgba(232,25,44,0.06)', border: '1px solid rgba(232,25,44,0.2)', padding: '12px 16px', borderRadius: 'var(--r-md)', fontSize: '0.86rem', color: 'var(--ink-2)', marginBottom: 16 }}>
-                  <strong style={{ color: 'var(--ink)' }}>Direct Import Model:</strong> Sourced upon your request directly from Japan for delivery to Australia or Sri Lanka. We do not keep vehicles on a showroom lot.
+                {/* Direct Import Info */}
+                <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', padding: '12px 16px', borderRadius: 'var(--r-md)', fontSize: '0.86rem', color: 'var(--ink-2)', marginBottom: 16 }}>
+                  <strong style={{ color: 'var(--ink)' }}>Direct Import Model:</strong> Sourced upon your request directly from Japan for delivery to Australia or Sri Lanka. Every car is inspected in Japan and imported directly upon the buyer's request.
                 </div>
 
                 {/* Primary CTAs */}
@@ -340,7 +340,7 @@ export default function VehicleDetails() {
 
           <div style={{ textAlign: 'center', marginTop: 36 }}>
             <Link to="/vehicles" className="btn btn-ghost">
-              Browse Full Import Catalog
+              Browse Full Import Catalogue
             </Link>
           </div>
         </div>

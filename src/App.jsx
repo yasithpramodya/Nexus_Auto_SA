@@ -8,6 +8,7 @@ import VehicleDetails from './pages/VehicleDetails.jsx';
 import About from './pages/About.jsx';
 import RequestCar from './pages/RequestCar.jsx';
 import Contact from './pages/Contact.jsx';
+import Finance from './pages/Finance.jsx';
 import Admin from './pages/Admin.jsx';
 import NotFound from './pages/NotFound.jsx';
 
@@ -27,17 +28,20 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/import" element={<WhatWeOffer />} />
+          <Route path="/finance" element={<Finance />} />
+          <Route path="/contact" element={<Contact />} />
+
+          {/* Secondary & alias routes */}
           <Route path="/vehicles" element={<WhatWeOffer />} />
           <Route path="/stock" element={<WhatWeOffer />} />
           <Route path="/vehicles/:id" element={<VehicleDetails />} />
           <Route path="/what-we-offer" element={<WhatWeOffer />} />
-          <Route path="/about" element={<About />} />
           <Route path="/request-a-car" element={<RequestCar />} />
           <Route path="/request" element={<RequestCar />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
-
         </Routes>
       </main>
       <Footer />

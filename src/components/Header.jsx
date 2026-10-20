@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { business } from '../data/vehicles.js';
-import { PhoneIcon, MapPinIcon, ArrowRightIcon, MailIcon } from './Icons.jsx';
+import { PhoneIcon, MapPinIcon, ArrowRightIcon, MailIcon, FacebookIcon, InstagramIcon } from './Icons.jsx';
 import nexusEmblem from '../assets/logo/nexus-emblem.svg';
 
 const links = [
-  { to: '/',              label: 'Home' },
-  { to: '/vehicles',      label: 'Import Catalog' },
-  { to: '/what-we-offer', label: 'How It Works' },
-  { to: '/about',         label: 'About Us' },
-  { to: '/contact',       label: 'Contact' },
+  { to: '/',        label: 'Home' },
+  { to: '/about',   label: 'About' },
+  { to: '/import',  label: 'Import' },
+  { to: '/finance', label: 'Finance' },
+  { to: '/contact', label: 'Contact Us' },
 ];
 
 export default function Header() {
@@ -73,8 +73,17 @@ export default function Header() {
           <div className="topbar-right">
             <span className="topbar-location">
               <MapPinIcon size={12} />
-              <span>Australia &amp; Sri Lanka Operations</span>
+              <span>Australia &amp; Sri Lanka</span>
             </span>
+            <span className="topbar-sep">·</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', display: 'flex', opacity: 0.9 }} aria-label="Facebook" title="Facebook">
+                <FacebookIcon size={12} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', display: 'flex', opacity: 0.9 }} aria-label="Instagram" title="Instagram">
+                <InstagramIcon size={12} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -91,7 +100,7 @@ export default function Header() {
             <div className="logo-text-group">
               <span className="logo-name">{business.name}</span>
               <span className="logo-tagline">
-                <span className="logo-accent">Japanese Imports</span> · AU &amp; LK
+                <span className="logo-accent">Japanese Imports</span> · Australia &amp; Sri Lanka
               </span>
             </div>
           </Link>
@@ -124,7 +133,7 @@ export default function Header() {
                 id="header-cta"
                 onClick={() => setOpen(false)}
               >
-                <span>Request a Car</span>
+                <span>Enquiry</span>
                 <ArrowRightIcon size={13} />
               </Link>
             </div>

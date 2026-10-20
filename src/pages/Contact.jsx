@@ -12,6 +12,8 @@ import {
   PhoneIcon,
   MailIcon,
   ArrowRightIcon,
+  FacebookIcon,
+  InstagramIcon,
 } from '../components/Icons.jsx';
 
 const enquiryTypes = ['General', 'Vehicle Enquiry', 'Vehicle Request'];
@@ -406,6 +408,35 @@ export default function Contact() {
                     <strong style={{ fontSize: '1rem' }}>{business.email}</strong>
                   </div>
                 </a>
+              </div>
+
+              {/* Social Channels */}
+              <div style={{ borderTop: '1px solid var(--border)', marginTop: 20, paddingTop: 16 }}>
+                <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--ink-3)', textTransform: 'uppercase', marginBottom: 10 }}>
+                  Social Channels
+                </div>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-btn"
+                    aria-label="Facebook"
+                    title="Facebook"
+                  >
+                    <FacebookIcon size={16} />
+                  </a>
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-btn"
+                    aria-label="Instagram"
+                    title="Instagram"
+                  >
+                    <InstagramIcon size={16} />
+                  </a>
+                </div>
               </div>
             </div>
 

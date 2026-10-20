@@ -2,7 +2,7 @@ export default function GradingGuide() {
   const grades = [
     {
       grade: 'Grade 5 / S',
-      title: 'Showroom / As-New Condition',
+      title: 'Pristine / As-New Condition',
       desc: 'Extremely rare collector-grade vehicles. Flawless original bodywork, factory fresh interior, and virtually no wear. Ideal for high-end investment cars.',
     },
     {
