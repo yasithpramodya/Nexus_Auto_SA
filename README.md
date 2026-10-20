@@ -1,37 +1,93 @@
-# Nexus Auto SA – React JS website
+# Nexus Auto SA
 
-Built with **React 19**, **Vite** and **React Router**. Plain CSS, no UI library.
+> Bringing Quality Japanese Cars Closer to You — Direct Vehicle Imports & Sourcing for Australia & Sri Lanka.
 
-## Pages
-| Page | URL | File |
-|---|---|---|
-| Home | `/` | `src/pages/Home.jsx` |
-| Showroom Vehicles | `/vehicles` | `src/pages/WhatWeOffer.jsx` |
-| About Us | `/about` | `src/pages/About.jsx` |
-| Contact & Location | `/contact` | `src/pages/Contact.jsx` |
+[![Live Site](https://img.shields.io/badge/Live_Site-nexusautosa--7a3ed.web.app-e8192c?style=flat&logo=firebase)](https://nexusautosa-7a3ed.web.app)
+[![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Firebase](https://img.shields.io/badge/Firebase-Firestore_%26_Hosting-ffca28?logo=firebase&logoColor=black)](https://firebase.google.com)
 
-Shared header and footer: `src/components/`. All styles: `src/styles.css`.
+Nexus Auto SA connects buyers across Australia and Sri Lanka with curated used cars and authentic Japanese imports. Every vehicle is inspected in Japan and imported directly upon the buyer's request with zero unnecessary showroom markups.
 
-## Run it
-```bash
-npm install
-npm run dev        # opens http://localhost:5173
+---
+
+## Key Features
+
+- **Direct Import Catalogue:** Curated Japanese vehicle models with comprehensive specs, high-resolution galleries, and auction grading details.
+- **Custom Import Enquiries:** Dedicated request portal allowing customers to specify their dream make, model, year, transmission, and budget.
+- **Admin Management Dashboard:**
+  - Secure passkey-protected administration panel.
+  - Live inventory CRUD with multi-image gallery upload (with automated client-side canvas compression) and URL support.
+  - Real-time customer enquiry tracking backed by Cloud Firestore.
+- **Modern Glassmorphic UI:** High-contrast dark theme, fluid micro-interactions, responsive mobile navigation, and optimized SVG branding.
+- **Finance Portal:** Customer repayment estimation and pre-approval inquiry workflow.
+- **Multi-Market Support:** Operations and logistics tailored for Australian and Sri Lankan vehicle standards.
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 19, React Router v7, HTML5, Vanilla CSS3 (Custom Design System tokens)
+- **Tooling:** Vite 8, ESLint
+- **Backend / Database:** Google Firebase (Cloud Firestore & Firebase Hosting)
+- **Deployment:** Firebase Hosting (`https://nexusautosa-7a3ed.web.app`)
+
+---
+
+## Project Structure
+
+```
+src/
+├── assets/         # Optimized vehicle imagery & SVG logo marks
+├── components/     # Header, Footer, VehicleModal, Icons, etc.
+├── data/           # Default inventory, specs & business configuration
+├── hooks/          # Scroll reveal & custom React hooks
+├── pages/
+│   ├── Home.jsx           # Landing page with hero & featured imports
+│   ├── About.jsx          # Company background & sourcing philosophy
+│   ├── WhatWeOffer.jsx    # Searchable, filterable import catalogue
+│   ├── VehicleDetails.jsx # Detailed vehicle spec sheet & lightbox gallery
+│   ├── RequestCar.jsx     # Custom vehicle import enquiry form
+│   ├── Finance.jsx        # Vehicle finance portal
+│   ├── Contact.jsx        # Direct contact & enquiry submission
+│   ├── Admin.jsx          # Protected dealer stock management
+│   └── NotFound.jsx       # 404 handler
+├── firebase.js     # Firebase SDK initialization
+└── styles.css      # Core design tokens, components & responsive queries
 ```
 
-## Make it yours
-- **Business details** (name, phone, email, address, hours, licence): `src/data/vehicles.js` → `business`
-- **Vehicles**: `src/data/vehicles.js` → `vehicles`
-- **Photos**: replace the placeholders in `src/assets/cars/` (same file names, or update the imports at the top of `vehicles.js`)
-- **Colours and fonts**: the `:root` block at the top of `src/styles.css`
+---
 
-## Publish
-```bash
-npm run build      # creates the dist/ folder
-```
-Upload `dist/` to Netlify, Vercel, cPanel or any web host. Because it uses page URLs like `/contact`, set the host to send every route to `index.html`:
-- Netlify: add a `_redirects` file in `public/` containing `/*  /index.html  200`
-- Vercel: works automatically for Vite projects
-- cPanel/Apache: add an `.htaccess` rewrite to `index.html`
+## Local Development
 
-## Contact form
-"Send enquiry" opens the visitor's email app with the message filled in. To receive enquiries straight to your inbox, replace `submit()` in `src/pages/Contact.jsx` with Formspree, EmailJS or your own API.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yasithpramodya/Nexus_Auto_SA.git
+   cd Nexus_Auto_SA
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start local dev server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+5. **Deploy to Firebase Hosting:**
+   ```bash
+   npx firebase deploy --only hosting
+   ```
+
+---
+
+## License
+
+Private repository © Nexus Auto SA. All rights reserved.
