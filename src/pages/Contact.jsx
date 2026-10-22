@@ -207,7 +207,7 @@ export default function Contact() {
               id="contact-form"
               aria-label="Send vehicle enquiry"
             >
-              <div>
+              <div className="form-panel-head">
                 <h2>Send an Enquiry</h2>
                 <p>Fill out the form below and our team will get in touch with you.</p>
               </div>

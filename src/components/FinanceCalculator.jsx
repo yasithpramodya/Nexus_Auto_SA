@@ -8,13 +8,23 @@ import {
   ArrowRightIcon,
 } from './Icons.jsx';
 
+// Keep only digits so "$55,000" style typing still parses cleanly
+const toDigits = (value) => value.replace(/\D/g, '').slice(0, 9);
+const withCommas = (digits) => (digits === '' ? '' : Number(digits).toLocaleString('en-AU'));
+
 export default function FinanceCalculator({ onScrollToForm }) {
-  const [carPrice, setCarPrice] = useState(55000);
-  const [deposit, setDeposit] = useState(5000);
+  // Text inputs are held as strings so the client can clear a box while typing
+  const [carPriceInput, setCarPriceInput] = useState('55000');
+  const [depositInput, setDepositInput] = useState('5000');
   const [termYears, setTermYears] = useState(5);
-  const [interestRate, setInterestRate] = useState(6.99);
+  const [rateInput, setRateInput] = useState('6.99');
   const [balloonPercent, setBalloonPercent] = useState(0);
   const [frequency, setFrequency] = useState('weekly'); // 'weekly' | 'fortnightly' | 'monthly'
+
+  const carPrice = Number(carPriceInput) || 0;
+  const deposit = Number(depositInput) || 0;
+  const interestRate = Number(rateInput) || 0;
+  const depositTooHigh = deposit > carPrice && carPrice > 0;
 
   const loanAmount = Math.max(0, carPrice - deposit);
   const balloonAmount = Math.round((loanAmount * balloonPercent) / 100);
@@ -38,6 +48,9 @@ export default function FinanceCalculator({ onScrollToForm }) {
   if (loanAmount > 0 && n > 0 && r > 0) {
     const discountFactor = Math.pow(1 + r, -n);
     periodicPayment = (loanAmount - balloonAmount * discountFactor) * r / (1 - discountFactor);
+  } else if (loanAmount > 0 && n > 0) {
+    // 0% rate entered: straight-line repayment of the non-balloon portion
+    periodicPayment = (loanAmount - balloonAmount) / n;
   }
 
   const roundedPayment = Math.round(periodicPayment);
@@ -90,62 +103,47 @@ export default function FinanceCalculator({ onScrollToForm }) {
           
           {/* 1. Vehicle Purchase Price */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <label style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>
-                Vehicle Purchase Price
-              </label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: 16, fontWeight: 800, color: 'var(--gold)' }}>
-                  {formatAud(carPrice)}
-                </span>
-              </div>
-            </div>
-            <input
-              type="range"
-              min="10000"
-              max="180000"
-              step="1000"
-              value={carPrice}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setCarPrice(val);
-                if (deposit > val) setDeposit(val);
-              }}
-              className="calc-slider"
-              style={{ width: '100%', accentColor: 'var(--gold)' }}
-            />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--ink-4)', fontFamily: 'var(--mono)', marginTop: 4 }}>
-              <span>$10,000</span>
-              <span>$95,000</span>
-              <span>$180,000+</span>
+            <label htmlFor="calc-price-input" style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', display: 'block', marginBottom: 8 }}>
+              Vehicle Purchase Price
+            </label>
+            <div className="calc-input-wrap">
+              <span className="calc-input-affix">$</span>
+              <input
+                id="calc-price-input"
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 55,000"
+                value={withCommas(carPriceInput)}
+                onChange={(e) => setCarPriceInput(toDigits(e.target.value))}
+                className="calc-input"
+              />
+              <span className="calc-input-affix">AUD</span>
             </div>
           </div>
 
           {/* 2. Deposit Amount */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <label style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>
-                Deposit / Trade-In Amount
-              </label>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: 16, fontWeight: 800, color: 'var(--ink)' }}>
-                {formatAud(deposit)}
-              </span>
+            <label htmlFor="calc-deposit-input" style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', display: 'block', marginBottom: 8 }}>
+              Deposit / Trade-In Amount
+            </label>
+            <div className={`calc-input-wrap${depositTooHigh ? ' is-invalid' : ''}`}>
+              <span className="calc-input-affix">$</span>
+              <input
+                id="calc-deposit-input"
+                type="text"
+                inputMode="numeric"
+                placeholder="0 for zero deposit"
+                value={withCommas(depositInput)}
+                onChange={(e) => setDepositInput(toDigits(e.target.value))}
+                className="calc-input"
+              />
+              <span className="calc-input-affix">AUD</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max={Math.min(80000, carPrice)}
-              step="500"
-              value={deposit}
-              onChange={(e) => setDeposit(Number(e.target.value))}
-              className="calc-slider"
-              style={{ width: '100%', accentColor: 'var(--gold)' }}
-            />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--ink-4)', fontFamily: 'var(--mono)', marginTop: 4 }}>
-              <span>$0 (Zero Deposit)</span>
-              <span>$40,000</span>
-              <span>$80,000</span>
-            </div>
+            {depositTooHigh && (
+              <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--red)' }}>
+                Deposit can't be more than the purchase price.
+              </p>
+            )}
           </div>
 
           {/* 3. Loan Term Buttons */}
@@ -180,21 +178,25 @@ export default function FinanceCalculator({ onScrollToForm }) {
           {/* 4. Interest Rate & Balloon Options */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div>
-              <label htmlFor="rate-selector" style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', display: 'block', marginBottom: 6 }}>
+              <label htmlFor="rate-input" style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', display: 'block', marginBottom: 6 }}>
                 Comparison Rate
               </label>
-              <select
-                id="rate-selector"
-                value={interestRate}
-                onChange={(e) => setInterestRate(Number(e.target.value))}
-                className="filter-sort-select"
-                style={{ width: '100%', minWidth: 'auto', fontSize: 13 }}
-              >
-                <option value={5.99}>5.99% p.a. (Prime Tier 1)</option>
-                <option value={6.99}>6.99% p.a. (Nexus Special)</option>
-                <option value={7.99}>7.99% p.a. (Standard Dealer)</option>
-                <option value={8.99}>8.99% p.a. (Flexible Credit)</option>
-              </select>
+              <div className="calc-input-wrap">
+                <input
+                  id="rate-input"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="e.g. 6.99"
+                  value={rateInput}
+                  onChange={(e) => {
+                    const val = e.target.value.trim();
+                    // Allow up to 2 whole digits and 2 decimals, e.g. 6, 6., 6.9, 12.49
+                    if (/^\d{0,2}(\.\d{0,2})?$/.test(val)) setRateInput(val);
+                  }}
+                  className="calc-input"
+                />
+                <span className="calc-input-affix">% p.a.</span>
+              </div>
             </div>
 
             <div>
@@ -316,7 +318,7 @@ export default function FinanceCalculator({ onScrollToForm }) {
                 </strong>
               </div>
               <div>
-                <span style={{ fontSize: 11, color: 'var(--ink-3)', display: 'block' }}>Balloon / Residual</span>
+                <span style={{ fontSize: 11, color: 'var(--ink-3)', display: 'block' }}>Balloon / Rate</span>
                 <strong style={{ fontSize: 14, color: balloonAmount > 0 ? 'var(--ink)' : 'var(--ink-4)', fontFamily: 'var(--mono)' }}>
                   {balloonAmount > 0 ? formatAud(balloonAmount) : 'None ($0)'}
                 </strong>
@@ -345,7 +347,7 @@ export default function FinanceCalculator({ onScrollToForm }) {
                 className="btn btn-ghost"
                 style={{ width: '100%', justifyContent: 'center', gap: 8, fontSize: 13, padding: '10px 16px' }}
               >
-                <span>Submit Quick Quote Below</span>
+                <span>Request Quick Quote Below</span>
                 <ArrowRightIcon size={13} style={{ transform: 'rotate(90deg)' }} />
               </button>
             )}

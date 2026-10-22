@@ -71,8 +71,6 @@ export default function Header() {
             <span className="topbar-desc">Direct Japanese Imports (Order on Request)</span>
           </div>
           <div className="topbar-right">
-            <span className="topbar-license">Licence ID: {business.dealerLicense}</span>
-            <span className="topbar-sep">·</span>
             <span className="topbar-location" style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                 <MapPinIcon size={12} />

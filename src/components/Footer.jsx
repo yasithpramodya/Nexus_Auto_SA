@@ -26,6 +26,7 @@ export default function Footer() {
             <p className="footer-brand-text">
               Connecting customers in Australia and Sri Lanka with quality used vehicles and Japanese imports. We help customers discover vehicles that suit their lifestyle, needs, and budgets.
             </p>
+            <p className="footer-brand-text footer-license">Licence ID: {business.dealerLicense}</p>
             <div className="footer-socials">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Facebook" title="Facebook">
                 <FacebookIcon size={16} />

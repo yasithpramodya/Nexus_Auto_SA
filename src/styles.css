@@ -1946,6 +1946,8 @@ ul { list-style: none; }
 }
 .form-panel h2 { font-size: 26px; font-weight: 900; letter-spacing: -.03em; }
 .form-panel p { color: var(--ink-2); font-size: 14px; margin-top: -10px; }
+.form-panel-head h2 { line-height: 1.2; }
+.form-panel-head p { margin-top: 10px; line-height: 1.6; }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
 .field { display: flex; flex-direction: column; gap: 7px; }
@@ -2084,6 +2086,7 @@ ul { list-style: none; }
 }
 .footer-bottom a { color: var(--red); text-decoration: none; }
 .footer-bottom a:hover { text-decoration: underline; }
+.footer-license { margin-top: 6px; border: none; background: none; padding: 0; }
 
 /* ── Scroll reveal ──────────────────────────────────────────── */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.22,.68,0,1.15); }
@@ -2193,6 +2196,43 @@ ul { list-style: none; }
   border: 2px solid #000;
   box-shadow: 0 0 10px rgba(245, 198, 64, 0.5);
   cursor: pointer;
+}
+
+/* ── Loan Calculator Text Inputs ── */
+.calc-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-1);
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r-sm);
+  padding: 0 14px;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.calc-input-wrap:hover { border-color: var(--border-3); }
+.calc-input-wrap:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+.calc-input-wrap.is-invalid { border-color: var(--red); }
+.calc-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 12px 0;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 800;
+}
+.calc-input::placeholder { color: var(--ink-4); font-weight: 400; font-size: 13px; }
+.calc-input-affix {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  white-space: nowrap;
 }
 
 /* ── Credit One Embedded Form Integration ── */
