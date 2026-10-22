@@ -199,6 +199,14 @@ export default function VehicleModal({ vehicle, onClose }) {
             </Link>
           </div>
 
+          {/* Finance Note */}
+          <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--ink-3)', paddingTop: 4 }}>
+            <span>Need car finance? We connect you with 50+ lenders via Credit One. </span>
+            <Link to="/finance" onClick={onClose} style={{ color: 'var(--gold)', textDecoration: 'underline', fontWeight: 600 }}>
+              Explore Finance Options
+            </Link>
+          </div>
+
         </div>
       </div>
     </div>

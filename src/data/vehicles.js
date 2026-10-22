@@ -17,6 +17,16 @@ import heroImg from '../assets/cars/hero.jpg';
 
 export const heroImage = heroImg;
 
+export const financeLinks = {
+  lendersCount: '50+',
+  headline: 'Over 50 Lenders. More Possibilities.',
+  subtext: 'We work with over 50 trusted finance providers to help you access a wider range of car finance options. By connecting you with our extensive lending network, we make it easier to explore competitive offers and find a finance solution that suits your budget. We’re committed to making your car-buying journey simpler, smarter, and more rewarding.',
+  applicationUrl: 'https://www.creditone.com.au/quick-quote?dealer_name=nexus-auto&utm_source=dealer&utm_medium=referral&utm_campaign=dealer_application_form&utm_keywords=quick-quote',
+  calculatorUrl: 'https://www.creditone.com.au/dealer-loan-calculator/loan/nexus-auto?utm_source=dealer&utm_medium=referral&utm_campaign=dealer_online_calculator',
+  scriptUrl: 'https://www.creditone.com.au/embedded/quick-quote/base/script.js',
+  dealerName: 'Nexus Auto',
+};
+
 export const business = {
   name: 'Nexus Auto SA',
   tagline: 'Bringing Quality Japanese Cars Closer to You',
@@ -26,7 +36,9 @@ export const business = {
   mobile: '0415 993 511',
   email: 'sales@nexusautosa.com.au',
   address: 'Australia & Sri Lanka Direct Import Operations (Order on Request)',
+  dealerLicense: 'MVD354078',
   note: 'We operate as a direct vehicle import and sourcing service. Every vehicle is inspected in Japan and imported directly upon the buyer\'s request to meet your exact requirements.',
+  finance: financeLinks,
   categories: [
     { id: 'hatchbacks', label: 'Fuel-Efficient Hatchbacks', icon: 'zap', desc: 'Practical, economical, and agile city vehicles with outstanding fuel economy.' },
     { id: 'sedans', label: 'Comfortable Sedans', icon: 'car', desc: 'Refined comfort, smooth powertrains, and sophisticated Japanese engineering.' },

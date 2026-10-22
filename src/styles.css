@@ -2156,3 +2156,66 @@ ul { list-style: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ── Custom Loan Calculator Slider Styles ── */
+.calc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--border-2);
+  border-radius: var(--r-full);
+  outline: none;
+  cursor: pointer;
+  margin: 10px 0;
+  transition: background var(--t-fast);
+}
+.calc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid #000;
+  box-shadow: 0 0 10px rgba(245, 198, 64, 0.5);
+  cursor: pointer;
+  transition: transform var(--t-fast);
+}
+.calc-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+}
+.calc-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid #000;
+  box-shadow: 0 0 10px rgba(245, 198, 64, 0.5);
+  cursor: pointer;
+}
+
+/* ── Credit One Embedded Form Integration ── */
+#coau-embedded-form {
+  width: 100%;
+}
+#coau-embedded-form .coau__quick-quote {
+  width: 100% !important;
+  max-width: 100% !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 8px 12px !important;
+  margin: 0 auto !important;
+}
+#coau-embedded-form .coau__button {
+  background-color: var(--red) !important;
+  border-radius: var(--r-full) !important;
+  font-weight: 700 !important;
+  transition: all var(--t-fast) !important;
+}
+#coau-embedded-form .coau__button:hover {
+  background-color: #c71221 !important;
+  transform: translateY(-2px) !important;
+}
+
+

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getVehicleById, vehicles, formatKm, business } from '../data/vehicles.js';
+import { getVehicleById, vehicles, formatKm, business, financeLinks } from '../data/vehicles.js';
 import { useReveal } from '../hooks/useReveal.js';
 import {
   ArrowRightIcon,
@@ -11,6 +11,8 @@ import {
   ShieldCheckIcon,
   CarIcon,
   MapPinIcon,
+  ExternalLinkIcon,
+  CalculatorIcon,
 } from '../components/Icons.jsx';
 
 export default function VehicleDetails() {
@@ -282,8 +284,54 @@ export default function VehicleDetails() {
                   </Link>
                 </div>
 
+                {/* Finance Assistance Box */}
+                <div
+                  style={{
+                    marginTop: 20,
+                    padding: '16px',
+                    borderRadius: 'var(--r-md)',
+                    background: 'rgba(245, 198, 64, 0.05)',
+                    border: '1px solid rgba(245, 198, 64, 0.25)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <span className="badge badge-gold" style={{ fontSize: 10 }}>50+ Lenders Available</span>
+                    <Link to="/finance" style={{ fontSize: 11, color: 'var(--gold)', textDecoration: 'underline' }}>
+                      Learn More
+                    </Link>
+                  </div>
+                  <strong style={{ fontSize: 13, color: 'var(--ink)', display: 'block', marginBottom: 6 }}>
+                    Need Car Finance for this Vehicle?
+                  </strong>
+                  <p style={{ fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.5, margin: '0 0 12px' }}>
+                    Compare over 50 trusted Australian lenders via Credit One with competitive rates for Japanese imports.
+                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <a
+                      href={financeLinks.applicationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                      style={{ fontSize: 11, padding: '8px 10px', justifyContent: 'center', gap: 4 }}
+                    >
+                      <span>Apply Now</span>
+                      <ExternalLinkIcon size={12} />
+                    </a>
+                    <a
+                      href={financeLinks.calculatorUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-ghost"
+                      style={{ fontSize: 11, padding: '8px 10px', justifyContent: 'center', gap: 4 }}
+                    >
+                      <CalculatorIcon size={12} />
+                      <span>Calculator</span>
+                    </a>
+                  </div>
+                </div>
+
                 {/* Direct Contact Assist */}
-                <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)', fontSize: '0.86rem', color: 'var(--ink-2)' }}>
+                <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid var(--border)', fontSize: '0.86rem', color: 'var(--ink-2)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <PhoneIcon size={14} />
                     <span>Call or Enquire: <a href={`tel:${business.phone.replace(/\s/g,'')}`} style={{ color: 'var(--ink)' }}>{business.phone}</a></span>
