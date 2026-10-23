@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { vehicles as defaultVehicles, formatKm, business } from '../data/vehicles.js';
-import { db } from '../firebase.js';
+import { db, auth, ADMIN_EMAIL } from '../firebase.js';
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import {
   collection,
   getDocs,
@@ -61,11 +62,10 @@ const compressImageFile = (file, maxWidth = 1200, maxHeight = 900, quality = 0.8
 
 
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return sessionStorage.getItem('admin_authenticated') === 'true';
-  });
-  const [passcode, setPasscode] = useState('');
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [signingIn, setSigningIn] = useState(false);
 
   const [activeTab, setActiveTab] = useState('inventory'); // inventory | requests | enquiries
   const [inventory, setInventory] = useState(defaultVehicles);
@@ -183,23 +183,39 @@ export default function Admin() {
     });
   };
 
-  // Authenticate admin
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Default admin passkey or custom environment passkey
-    if (passcode.trim() === 'nexus2026' || passcode.trim() === 'admin123') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('admin_authenticated', 'true');
-      setAuthError('');
-    } else {
-      setAuthError('Invalid administrator passcode. Please try again.');
+  // Track Google sign-in; only the business Workspace account is treated as admin
+  useEffect(() => {
+    return onAuthStateChanged(auth, async (user) => {
+      if (user && user.email?.toLowerCase() !== ADMIN_EMAIL) {
+        await signOut(auth);
+        setAuthError(`${user.email} is not authorised. Please sign in with ${ADMIN_EMAIL}.`);
+        setIsAuthenticated(false);
+      } else {
+        setIsAuthenticated(Boolean(user));
+      }
+      setAuthChecked(true);
+    });
+  }, []);
+
+  // Authenticate admin with Google (Workspace account)
+  const handleLogin = async () => {
+    setAuthError('');
+    setSigningIn(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ hd: 'nexusautosa.com.au', login_hint: ADMIN_EMAIL, prompt: 'select_account' });
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+        console.error('Sign-in failed:', err);
+        setAuthError('Sign-in failed. Please try again.');
+      }
+    } finally {
+      setSigningIn(false);
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    sessionStorage.removeItem('admin_authenticated');
-  };
+  const handleLogout = () => signOut(auth);
 
   // Fetch data from Firestore
   useEffect(() => {
@@ -349,7 +365,7 @@ export default function Admin() {
               Dealer Administration
             </h1>
             <p style={{ color: 'var(--ink-2)', fontSize: '0.9rem', marginBottom: 24, lineHeight: 1.5 }}>
-              Enter your authorized management passcode to access stock management and enquiries.
+              Sign in with the {ADMIN_EMAIL} Google Workspace account to access stock management and enquiries.
             </p>
 
             {authError && (
@@ -368,21 +384,15 @@ export default function Admin() {
               </div>
             )}
 
-            <form onSubmit={handleLogin}>
-              <div className="field" style={{ marginBottom: 20 }}>
-                <input
-                  type="password"
-                  placeholder="Enter Passcode..."
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  style={{ textAlign: 'center', fontSize: '1.1rem', letterSpacing: '0.1em' }}
-                  required
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                Unlock Dashboard
-              </button>
-            </form>
+            <button
+              type="button"
+              onClick={handleLogin}
+              disabled={signingIn || !authChecked}
+              className="btn btn-primary"
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              {!authChecked ? 'Checking session…' : signingIn ? 'Signing in…' : 'Sign in with Google'}
+            </button>
           </div>
         </div>
       </section>

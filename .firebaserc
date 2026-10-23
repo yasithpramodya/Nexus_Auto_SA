@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "nexusautosa-7a3ed"
-  }
+    "default": "nexus-auto-sa"
+  },
+  "targets": {},
+  "etags": {}
 }

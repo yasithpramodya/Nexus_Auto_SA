@@ -2,7 +2,7 @@
 
 > Bringing Quality Japanese Cars Closer to You — Direct Vehicle Imports & Sourcing for Australia & Sri Lanka.
 
-[![Live Site](https://img.shields.io/badge/Live_Site-nexusautosa--7a3ed.web.app-e8192c?style=flat&logo=firebase)](https://nexusautosa-7a3ed.web.app)
+[![Live Site](https://img.shields.io/badge/Live_Site-nexus--auto--sa.web.app-e8192c?style=flat&logo=firebase)](https://nexus-auto-sa.web.app)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vitejs.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore_%26_Hosting-ffca28?logo=firebase&logoColor=black)](https://firebase.google.com)
@@ -30,7 +30,7 @@ Nexus Auto SA connects buyers across Australia and Sri Lanka with curated used c
 - **Frontend:** React 19, React Router v7, HTML5, Vanilla CSS3 (Custom Design System tokens)
 - **Tooling:** Vite 8, ESLint
 - **Backend / Database:** Google Firebase (Cloud Firestore & Firebase Hosting)
-- **Deployment:** Firebase Hosting (`https://nexusautosa-7a3ed.web.app`)
+- **Deployment:** Firebase Hosting (`https://nexus-auto-sa.web.app`)
 
 ---
 
