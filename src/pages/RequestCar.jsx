@@ -4,6 +4,7 @@ import { business } from '../data/vehicles.js';
 import { useReveal } from '../hooks/useReveal.js';
 import { db } from '../firebase.js';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { sendFormEmail } from '../utils/sendFormEmail.js';
 import {
   CarIcon,
   ShieldCheckIcon,
@@ -124,14 +125,38 @@ export default function RequestCar() {
       submittedAtIso: new Date().toISOString(),
     };
 
-    try {
-      // Connect to Firestore backend
-      const docRef = await addDoc(collection(db, 'preferred_requests'), requestPayload);
-      const generatedRef = docRef.id ? docRef.id.slice(0, 8).toUpperCase() : `REQ-${Date.now().toString().slice(-6)}`;
-      setReferenceId(generatedRef);
+    // Save to Firestore and email the sales inbox at the same time
+    const [saveResult, emailResult] = await Promise.allSettled([
+      addDoc(collection(db, 'preferred_requests'), requestPayload),
+      sendFormEmail({
+        formName: 'Request a Car Form',
+        summary: `${requestPayload.preferredMake} ${requestPayload.preferredModel} for ${requestPayload.fullName}`,
+        replyTo: requestPayload.email,
+        fields: {
+          'Full Name': requestPayload.fullName,
+          'Email': requestPayload.email,
+          'Phone': requestPayload.phoneNumber,
+          'Location': requestPayload.location,
+          'Preferred Make': requestPayload.preferredMake,
+          'Preferred Model': requestPayload.preferredModel,
+          'Year Range': requestPayload.yearRange,
+          'Budget': requestPayload.budget,
+          'Body Type': requestPayload.bodyType,
+          'Transmission': requestPayload.transmission,
+          'Fuel Type': requestPayload.fuelType,
+          'Preferred Colour': requestPayload.preferredColour,
+          'Additional Requirements': requestPayload.additionalRequirements,
+        },
+      }),
+    ]);
+    if (emailResult.status === 'rejected') console.warn('Request email not sent:', emailResult.reason);
+
+    if (saveResult.status === 'fulfilled' || emailResult.status === 'fulfilled') {
+      const docId = saveResult.value?.id;
+      setReferenceId(docId ? docId.slice(0, 8).toUpperCase() : `REQ-${Date.now().toString().slice(-6)}`);
       setStatus('success');
-    } catch (err) {
-      console.warn('Firestore error, falling back to local submission record:', err);
+    } else {
+      console.warn('Firestore error, falling back to local submission record:', saveResult.reason);
       // Fallback: save to localStorage and compose direct mailto backup so request is never lost
       try {
         const stored = JSON.parse(localStorage.getItem('preferred_requests') || '[]');

@@ -4,6 +4,7 @@ import { business } from '../data/vehicles.js';
 import { useReveal } from '../hooks/useReveal.js';
 import { db } from '../firebase.js';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { sendFormEmail } from '../utils/sendFormEmail.js';
 import {
   CarIcon,
   AlertCircleIcon,
@@ -101,13 +102,32 @@ export default function Contact() {
       submittedAtIso: new Date().toISOString(),
     };
 
-    try {
-      const docRef = await addDoc(collection(db, 'enquiries'), enquiryPayload);
-      const generatedRef = docRef.id ? docRef.id.slice(0, 8).toUpperCase() : `ENQ-${Date.now().toString().slice(-6)}`;
-      setReferenceId(generatedRef);
+    // Save to Firestore and email the sales inbox at the same time
+    const [saveResult, emailResult] = await Promise.allSettled([
+      addDoc(collection(db, 'enquiries'), enquiryPayload),
+      sendFormEmail({
+        formName: 'Contact Us Form',
+        summary: `${enquiryPayload.enquiryType} from ${enquiryPayload.name}`,
+        replyTo: enquiryPayload.email,
+        fields: {
+          'Name': enquiryPayload.name,
+          'Email': enquiryPayload.email,
+          'Phone': enquiryPayload.phone,
+          'Enquiry Type': enquiryPayload.enquiryType,
+          'Subject': enquiryPayload.subject,
+          'Vehicle Reference': enquiryPayload.vehicleReference || 'None',
+          'Message': enquiryPayload.message,
+        },
+      }),
+    ]);
+    if (emailResult.status === 'rejected') console.warn('Enquiry email not sent:', emailResult.reason);
+
+    if (saveResult.status === 'fulfilled' || emailResult.status === 'fulfilled') {
+      const docId = saveResult.value?.id;
+      setReferenceId(docId ? docId.slice(0, 8).toUpperCase() : `ENQ-${Date.now().toString().slice(-6)}`);
       setStatus('success');
-    } catch (err) {
-      console.warn('Firestore error, falling back to local storage backup:', err);
+    } else {
+      console.warn('Firestore error, falling back to local storage backup:', saveResult.reason);
       try {
         const stored = JSON.parse(localStorage.getItem('customer_enquiries') || '[]');
         const fallbackRef = `ENQ-${Date.now().toString().slice(-6)}`;
