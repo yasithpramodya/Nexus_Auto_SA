@@ -346,9 +346,7 @@ export default function RequestCar() {
                       >
                         <option value="+61">+61 (AU)</option>
                         <option value="+94">+94 (LK)</option>
-                        <option value="+1">+1 (US/CA)</option>
-                        <option value="+44">+44 (UK)</option>
-                        <option value="+81">+81 (JP)</option>
+                        <option value="+1">+1 (US)</option>
                       </select>
                     </div>
 
